@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="eDiskontModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="DeliveryMethods">
+    <Key>
+      <PropertyRef Name="DeliveryMethodID" />
+    </Key>
+    <Property Name="DeliveryMethodID" Type="Int32" Nullable="false" />
+    <Property Name="MethodName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="OrdersData" Relationship="Self.FK_OrdersData_DeliveryMethods" FromRole="DeliveryMethods" ToRole="OrdersData" />
+  </EntityType>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="ItemID" />
+    </Key>
+    <Property Name="ItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PackSize" Type="Int32" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+    <Property Name="ItemTypeID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="ItemTypes" Relationship="Self.FK_Items_ItemTypes" FromRole="Items" ToRole="ItemTypes" />
+    <NavigationProperty Name="OrdersItems" Relationship="Self.FK_OrdersItems_Items" FromRole="Items" ToRole="OrdersItems" />
+  </EntityType>
+  <EntityType Name="ItemTypes">
+    <Key>
+      <PropertyRef Name="ItemTypeID" />
+    </Key>
+    <Property Name="ItemTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Items" Relationship="Self.FK_Items_ItemTypes" FromRole="ItemTypes" ToRole="Items" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="OrderID" />
+    </Key>
+    <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrderDataID" Type="Int32" Nullable="false" />
+    <Property Name="TotalPrice" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="OrdersData" Relationship="Self.FK_Orders_OrdersData" FromRole="Orders" ToRole="OrdersData" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Orders_Users" FromRole="Orders" ToRole="Users" />
+    <NavigationProperty Name="OrdersItems" Relationship="Self.FK_OrdersItems_Orders" FromRole="Orders" ToRole="OrdersItems" />
+    <Property Name="OrderDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="OrdersData">
+    <Key>
+      <PropertyRef Name="OrderDataID" />
+    </Key>
+    <Property Name="OrderDataID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Company" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DeliveryMethodID" Type="Int32" Nullable="false" />
+    <Property Name="DeliveryAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="DeliveryMethods" Relationship="Self.FK_OrdersData_DeliveryMethods" FromRole="OrdersData" ToRole="DeliveryMethods" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_OrdersData" FromRole="OrdersData" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="OrdersItems">
+    <Key>
+      <PropertyRef Name="OrderID" />
+      <PropertyRef Name="ItemID" />
+    </Key>
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <Property Name="ItemID" Type="Int32" Nullable="false" />
+    <Property Name="Amount" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Items" Relationship="Self.FK_OrdersItems_Items" FromRole="OrdersItems" ToRole="Items" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK_OrdersItems_Orders" FromRole="OrdersItems" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Pass" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Users" FromRole="Users" ToRole="Orders" />
+    <NavigationProperty Name="AuthTokens" Relationship="eDiskontModel.FK_AuthTokens_Users" FromRole="Users" ToRole="AuthTokens" />
+  </EntityType>
+  <Association Name="FK_OrdersData_DeliveryMethods">
+    <End Role="DeliveryMethods" Type="Self.DeliveryMethods" Multiplicity="1" />
+    <End Role="OrdersData" Type="Self.OrdersData" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DeliveryMethods">
+        <PropertyRef Name="DeliveryMethodID" />
+      </Principal>
+      <Dependent Role="OrdersData">
+        <PropertyRef Name="DeliveryMethodID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Items_ItemTypes">
+    <End Role="ItemTypes" Type="Self.ItemTypes" Multiplicity="1" />
+    <End Role="Items" Type="Self.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemTypes">
+        <PropertyRef Name="ItemTypeID" />
+      </Principal>
+      <Dependent Role="Items">
+        <PropertyRef Name="ItemTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrdersItems_Items">
+    <End Role="Items" Type="Self.Items" Multiplicity="1" />
+    <End Role="OrdersItems" Type="Self.OrdersItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="ItemID" />
+      </Principal>
+      <Dependent Role="OrdersItems">
+        <PropertyRef Name="ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_OrdersData">
+    <End Role="OrdersData" Type="Self.OrdersData" Multiplicity="1" />
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OrdersData">
+        <PropertyRef Name="OrderDataID" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="OrderDataID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrdersItems_Orders">
+    <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+    <End Role="OrdersItems" Type="Self.OrdersItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="OrderID" />
+      </Principal>
+      <Dependent Role="OrdersItems">
+        <PropertyRef Name="OrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="eDiskontEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="DeliveryMethods" EntityType="Self.DeliveryMethods" />
+    <EntitySet Name="Items" EntityType="Self.Items" />
+    <EntitySet Name="ItemTypes" EntityType="Self.ItemTypes" />
+    <EntitySet Name="Orders" EntityType="Self.Orders" />
+    <EntitySet Name="OrdersData" EntityType="Self.OrdersData" />
+    <EntitySet Name="OrdersItems" EntityType="Self.OrdersItems" />
+    <EntitySet Name="Users" EntityType="Self.Users" />
+    <AssociationSet Name="FK_OrdersData_DeliveryMethods" Association="Self.FK_OrdersData_DeliveryMethods">
+      <End Role="DeliveryMethods" EntitySet="DeliveryMethods" />
+      <End Role="OrdersData" EntitySet="OrdersData" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Items_ItemTypes" Association="Self.FK_Items_ItemTypes">
+      <End Role="ItemTypes" EntitySet="ItemTypes" />
+      <End Role="Items" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrdersItems_Items" Association="Self.FK_OrdersItems_Items">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="OrdersItems" EntitySet="OrdersItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_OrdersData" Association="Self.FK_Orders_OrdersData">
+      <End Role="OrdersData" EntitySet="OrdersData" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_Users" Association="Self.FK_Orders_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrdersItems_Orders" Association="Self.FK_OrdersItems_Orders">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="OrdersItems" EntitySet="OrdersItems" />
+    </AssociationSet>
+    <EntitySet Name="AuthTokens" EntityType="eDiskontModel.AuthTokens" />
+    <AssociationSet Name="FK_AuthTokens_Users" Association="eDiskontModel.FK_AuthTokens_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="AuthTokens" EntitySet="AuthTokens" />
+    </AssociationSet>
+    <EntitySet Name="sysdiagrams" EntityType="eDiskontModel.sysdiagrams" />
+  </EntityContainer>
+  <EntityType Name="AuthTokens">
+    <Key>
+      <PropertyRef Name="AuthTokenID" />
+    </Key>
+    <Property Name="AuthTokenID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Token" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="IPAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Users" Relationship="eDiskontModel.FK_AuthTokens_Users" FromRole="AuthTokens" ToRole="Users" />
+  </EntityType>
+  <Association Name="FK_AuthTokens_Users">
+    <End Type="eDiskontModel.Users" Role="Users" Multiplicity="1" />
+    <End Type="eDiskontModel.AuthTokens" Role="AuthTokens" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="AuthTokens">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+</Schema>

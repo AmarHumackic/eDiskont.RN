@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e63dfc94ffa5421f9e098939b40d88ba" Name="Diagram1">
+        <EntityTypeShape EntityType="eDiskontModel.DeliveryMethods" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="eDiskontModel.Items" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="eDiskontModel.ItemTypes" Width="1.5" PointX="3" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="eDiskontModel.Orders" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="eDiskontModel.OrdersData" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="eDiskontModel.OrdersItems" Width="1.5" PointX="7.5" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="eDiskontModel.Users" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
+        <AssociationConnector Association="eDiskontModel.FK_OrdersData_DeliveryMethods" ManuallyRouted="false" />
+        <AssociationConnector Association="eDiskontModel.FK_Items_ItemTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="eDiskontModel.FK_OrdersItems_Items" ManuallyRouted="false" />
+        <AssociationConnector Association="eDiskontModel.FK_Orders_OrdersData" ManuallyRouted="false" />
+        <AssociationConnector Association="eDiskontModel.FK_Orders_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="eDiskontModel.FK_OrdersItems_Orders" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="eDiskontModel.AuthTokens" Width="1.5" PointX="5.25" PointY="4.375" />
+        <AssociationConnector Association="eDiskontModel.FK_AuthTokens_Users" />
+        <EntityTypeShape EntityType="eDiskontModel.sysdiagrams" Width="1.5" PointX="7.375" PointY="4.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
